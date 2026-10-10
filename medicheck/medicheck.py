@@ -8,8 +8,10 @@ a pharmacist) before the demo.
 import csv
 import difflib
 import os
+import random
 import re
 import sqlite3
+from datetime import date
 
 import streamlit as st
 
@@ -72,11 +74,37 @@ STACK_WHY = {
         "Blood pressure may rise and weaken blood pressure medicines."
     ]
 }
+SAFETY_TIPS = [
+    "Keep an up-to-date list of all your medicines (including vitamins and herbal products) in your wallet or phone.",
+    "Tell every doctor, dentist and pharmacist about everything you take.",
+    "Never share prescription medicines, even with someone who has the same symptoms.",
+    "Check expiry dates, and store medicines out of children's reach.",
+    "Ask your pharmacist whether a medicine should be taken with food or on an empty stomach.",
+    "Keep medicines in their original packaging so you can always read the name and instructions.",
+    "Don't stop a prescribed medicine just because you feel better. Ask your doctor first.",
+    "Bring all your medicines to a check-up once a year for a review.",
+]
 THEME_CSS = """<style>
-/* Works in light AND dark mode: only a faint teal tint and medical crosses on top of the normal theme. */
-.stApp {background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cg fill='%231a9a85' fill-opacity='0.13'%3E%3Crect x='54' y='40' width='12' height='40' rx='3'/%3E%3Crect x='40' y='54' width='40' height='12' rx='3'/%3E%3C/g%3E%3C/svg%3E"), linear-gradient(160deg, rgba(15,107,92,0.14) 0%, rgba(15,107,92,0.02) 100%);}
-.block-container {padding-top:2.5rem;}
-h1 {color:#1a9a85;}
+.stApp {background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cg fill='%231a9a85' fill-opacity='0.07'%3E%3Crect x='74' y='60' width='12' height='40' rx='3'/%3E%3Crect x='60' y='74' width='40' height='12' rx='3'/%3E%3C/g%3E%3C/svg%3E"), linear-gradient(160deg, rgba(15,107,92,0.10) 0%, rgba(15,107,92,0.02) 100%);}
+.block-container {padding-top:2rem;}
+[data-testid="stSidebar"] {border-right:3px solid #1a9a85;}
+.hero {display:flex; align-items:center; gap:16px; padding:18px 24px; margin-bottom:12px; border-radius:18px; color:#fff; background:linear-gradient(120deg,#0f6b5c 0%,#1a9a85 55%,#4cc9b0 100%); box-shadow:0 6px 18px rgba(15,107,92,0.25);}
+.hero-pill {font-size:2.2rem; background:rgba(255,255,255,0.22); border-radius:50%; width:64px; height:64px; min-width:64px; display:flex; align-items:center; justify-content:center;}
+.hero-title {font-size:2.1rem; font-weight:800; line-height:1.1;}
+.hero-sub {font-size:1rem; opacity:0.95;}
+.stTabs [data-baseweb="tab-list"] {gap:8px;}
+.stTabs [data-baseweb="tab"] {border-radius:999px; padding:8px 18px; background:rgba(26,154,133,0.14); height:auto;}
+.stTabs [data-baseweb="tab-highlight"], .stTabs [data-baseweb="tab-border"] {display:none;}
+.stTabs [data-baseweb="tab"][aria-selected="true"] {background:#1a9a85;}
+.stTabs [data-baseweb="tab"][aria-selected="true"] p {color:#fff; font-weight:700;}
+.stButton > button {border-radius:999px; border:2px solid #1a9a85; font-weight:600; padding:0.4rem 1.4rem;}
+.stButton > button:hover {background:#1a9a85; border-color:#1a9a85;}
+.stButton > button:hover p {color:#fff;}
+div[data-testid="stAlert"] {border-radius:14px;}
+@media (prefers-color-scheme: light) {
+  [data-testid="stSidebar"] {background:linear-gradient(180deg,#c9efe6 0%,#effaf7 100%);}
+  [data-testid="stSidebar"] h2 {color:#0f6b5c;}
+}
 </style>"""
 FREQ_WORDS = {"once": 1, "od": 1, "daily": 1, "twice": 2, "bd": 2, "bid": 2,
               "thrice": 3, "tds": 3, "tid": 3, "qid": 4, "qds": 4}
@@ -342,11 +370,11 @@ st.set_page_config(page_title="MediCheck", page_icon="💊")
 st.markdown(THEME_CSS, unsafe_allow_html=True)
 
 with st.sidebar:
-    st.header("Your health profile")
+    st.header("🩺 Your health profile")
     profile = st.multiselect("Allergies and conditions (optional)", PROFILE_OPTIONS,
                              help="Used to flag medicines that need extra care for you. Nothing is saved.")
     st.divider()
-    st.header("Database")
+    st.header("📚 Database")
     n_meds = query("SELECT COUNT(*) FROM medicines")[0][0]
     n_conditions = query("SELECT COUNT(DISTINCT term) FROM terms WHERE kind='use'")[0][0]
     st.write(f"{n_meds} medicines, {n_conditions} conditions")
@@ -355,9 +383,10 @@ with st.sidebar:
     if pick != "-":
         meds = query("SELECT DISTINCT medicine FROM terms WHERE kind='use' AND term=?", (pick,))
         st.write(", ".join(sorted(r[0] for r in meds)))
+    st.divider()
+    st.info("💡 " + random.Random(date.today().toordinal()).choice(SAFETY_TIPS))
 
-st.title("💊 MediCheck")
-st.write("Check your medicines before you take them.")
+st.markdown("""<div class="hero"><div class="hero-pill">💊</div><div><div class="hero-title">MediCheck</div><div class="hero-sub">Check your medicines before you take them</div></div></div>""", unsafe_allow_html=True)
 st.warning("General information only. MediCheck cannot tell you whether a medicine is safe for YOU. "
            "Never start, stop or change a prescribed medicine without your doctor or pharmacist.")
 
@@ -551,6 +580,7 @@ def my_medicines_tab():
             show_report(mine + [name], [], profile, focus=name)   # only alarms about the NEW medicine
             if name not in mine:
                 st.session_state.my_meds = mine + [name]
+                st.toast(f"{name} added to your list", icon="💊")
                 st.caption(f"{name} was added to your list.")
 
 
