@@ -1,6 +1,6 @@
 """MediCheck - run with:  streamlit run medicheck.py
 
-Keep medicines.csv in the same folder. To add a medicine, add a row to the CSV;
+Keep the CSV files in the same folder. To add a medicine, add a row to medicines.csv;
 the SQLite database (medicheck.db) rebuilds itself the next time the app runs.
 VERIFY every row, especially max_daily_mg, against a real source (NHS, BNF, the label,
 a pharmacist) before the demo.
@@ -73,9 +73,10 @@ STACK_WHY = {
     ]
 }
 THEME_CSS = """<style>
-.stApp {background-color:#e8f5f2; background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cg fill='%230f6b5c' fill-opacity='0.08'%3E%3Crect x='54' y='40' width='12' height='40' rx='3'/%3E%3Crect x='40' y='54' width='40' height='12' rx='3'/%3E%3C/g%3E%3C/svg%3E"), linear-gradient(160deg,#e8f5f2 0%,#d3ebe4 100%);}
-.block-container {background:rgba(255,255,255,0.94); border-radius:18px; padding:2rem 2rem 3rem; margin-top:1rem; box-shadow:0 4px 24px rgba(15,107,92,0.14);}
-h1 {color:#0f6b5c;}
+/* Works in light AND dark mode: only a faint teal tint and medical crosses on top of the normal theme. */
+.stApp {background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cg fill='%231a9a85' fill-opacity='0.13'%3E%3Crect x='54' y='40' width='12' height='40' rx='3'/%3E%3Crect x='40' y='54' width='40' height='12' rx='3'/%3E%3C/g%3E%3C/svg%3E"), linear-gradient(160deg, rgba(15,107,92,0.14) 0%, rgba(15,107,92,0.02) 100%);}
+.block-container {padding-top:2.5rem;}
+h1 {color:#1a9a85;}
 </style>"""
 FREQ_WORDS = {"once": 1, "od": 1, "daily": 1, "twice": 2, "bd": 2, "bid": 2,
               "thrice": 3, "tds": 3, "tid": 3, "qid": 4, "qds": 4}
@@ -88,7 +89,7 @@ def split(text):
 
 
 def build_database():
-    """Read medicines.csv and fill two tables: medicines (details) and terms (names + conditions)."""
+    """Read the CSV files and fill six tables: medicines, terms, interactions, food_warnings, profile_warnings, duplications."""
     if os.path.exists(DB_PATH):
         os.remove(DB_PATH)
     con = sqlite3.connect(DB_PATH)
@@ -131,7 +132,7 @@ def build_database():
 
 
 def ensure_database():
-    """Build the database if it is missing or older than the CSV."""
+    """Build the database if it is missing or older than the CSV files."""
     newest = max(os.path.getmtime(p) for p in (CSV_PATH, IX_PATH, FOOD_PATH, PROFILE_PATH, DUP_PATH))
     if not os.path.exists(DB_PATH) or newest > os.path.getmtime(DB_PATH):
         build_database()
@@ -263,7 +264,7 @@ def resolve_medicines(selected, typed):
 
 
 def check_combination(names):
-    """Duplication alarm + interaction alarm. Returns (same_twice, group_clashes, interactions)."""
+    """Duplication alarm + interaction alarm. Returns (same_twice, group_clashes, pair_dups, interactions)."""
     same_twice = sorted({n for n in names if names.count(n) > 1})
     unique = sorted(set(names))
     groups = {}
@@ -346,8 +347,9 @@ with st.sidebar:
                              help="Used to flag medicines that need extra care for you. Nothing is saved.")
     st.divider()
     st.header("Database")
-    st.write(f"{query('SELECT COUNT(*) FROM medicines')[0][0]} medicines, "
-             f"{query('SELECT COUNT(DISTINCT term) FROM terms WHERE kind=\"use\"')[0][0]} conditions")
+    n_meds = query("SELECT COUNT(*) FROM medicines")[0][0]
+    n_conditions = query("SELECT COUNT(DISTINCT term) FROM terms WHERE kind='use'")[0][0]
+    st.write(f"{n_meds} medicines, {n_conditions} conditions")
     conditions = sorted(r[0] for r in query("SELECT DISTINCT term FROM terms WHERE kind='use'"))
     pick = st.selectbox("Browse by condition", ["-"] + conditions)
     if pick != "-":
@@ -367,13 +369,13 @@ def single_medicine_tab():
     if st.button("Run MediCheck"):
         if not condition.strip() or not medication.strip():
             st.error("Please enter both your condition and your medicine.")
-            st.stop()
+            return
 
         name = find_medicine(medication)
         if name is None:
             st.info("This medicine isn't in our database yet. That does not mean it is safe or unsafe. "
                     "Please ask your doctor or pharmacist.")
-            st.stop()
+            return
 
         info = get_medicine(name)
         if info["info_level"] == "interaction_only":
@@ -381,7 +383,7 @@ def single_medicine_tab():
             st.info(f"MediCheck has no detailed information on {name} yet. It only checks it for interactions "
                     f"and duplicates, so there is no caution score. Please ask your pharmacist about it.")
             show_known_interactions(name)
-            st.stop()
+            return
         state, dose_msg = dose_check(name, dose, info["max_mg"])
 
         st.header(name)
