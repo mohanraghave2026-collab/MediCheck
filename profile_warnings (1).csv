@@ -1,0 +1,39 @@
+medicine,profile,severity,why,advice
+Amoxicillin,Penicillin allergy,High,Amoxicillin is a penicillin. If you are allergic to penicillin it can cause a serious allergic reaction.,Don't take it. Tell your doctor or pharmacist about your allergy straight away.
+Cefixime,Penicillin allergy,Moderate,Some people who are allergic to penicillin also react to cephalosporins such as cefixime.,Tell your doctor about your penicillin allergy before taking it.
+Ibuprofen,Asthma,Moderate,Anti-inflammatory painkillers can trigger asthma attacks in some people.,"Ask your doctor or pharmacist before using it, and get help if you start wheezing."
+Diclofenac,Asthma,Moderate,Anti-inflammatory painkillers can trigger asthma attacks in some people.,"Ask your doctor or pharmacist before using it, and get help if you start wheezing."
+Aspirin,Asthma,Moderate,Anti-inflammatory painkillers can trigger asthma attacks in some people.,"Ask your doctor or pharmacist before using it, and get help if you start wheezing."
+Metoprolol,Asthma,Moderate,Beta-blockers can trigger breathing difficulty in people with asthma.,Tell your prescriber about your asthma and follow their advice.
+Atorvastatin,Pregnant or planning pregnancy,High,Statins are generally not advised in pregnancy.,Talk to your doctor before taking it.
+Rosuvastatin,Pregnant or planning pregnancy,High,Statins are generally not advised in pregnancy.,Talk to your doctor before taking it.
+Losartan,Pregnant or planning pregnancy,High,This medicine can harm an unborn baby.,Speak to your doctor urgently about alternatives. Don't stop it without advice.
+Warfarin,Pregnant or planning pregnancy,High,This medicine can harm an unborn baby.,Speak to your doctor urgently about alternatives. Don't stop it without advice.
+Ibuprofen,Pregnant or planning pregnancy,Moderate,"Anti-inflammatory painkillers are generally avoided in pregnancy, especially in the later months.",Ask your doctor or pharmacist for a safer option.
+Diclofenac,Pregnant or planning pregnancy,Moderate,"Anti-inflammatory painkillers are generally avoided in pregnancy, especially in the later months.",Ask your doctor or pharmacist for a safer option.
+Aspirin,Pregnant or planning pregnancy,Moderate,Pain-relief doses of aspirin are generally avoided in pregnancy. Low-dose aspirin is sometimes prescribed on purpose.,Only take aspirin in pregnancy if your doctor told you to.
+Prednisolone,Pregnant or planning pregnancy,Moderate,Steroids are sometimes needed in pregnancy but should be directed by a doctor.,Ask your doctor to review it.
+Ibuprofen,Kidney disease,High,Anti-inflammatory painkillers can worsen kidney problems.,Avoid unless your kidney doctor says it is fine.
+Diclofenac,Kidney disease,High,Anti-inflammatory painkillers can worsen kidney problems.,Avoid unless your kidney doctor says it is fine.
+Metformin,Kidney disease,Moderate,"Metformin may need a lower dose, or be unsuitable, if kidney function is reduced.",Make sure your doctor knows about your kidney disease.
+Losartan,Kidney disease,Moderate,It needs regular kidney and potassium checks.,Keep your blood tests up to date.
+Rosuvastatin,Kidney disease,Moderate,The dose may need lowering in kidney disease.,Tell your prescriber about your kidney disease.
+Paracetamol,Liver disease,Moderate,"The liver processes paracetamol, so extra care is needed.",Ask your doctor what daily limit is right for you.
+Atorvastatin,Liver disease,Moderate,Statins are processed by the liver and may need monitoring.,Tell your prescriber about your liver disease.
+Rosuvastatin,Liver disease,Moderate,Statins are processed by the liver and may need monitoring.,Tell your prescriber about your liver disease.
+Diclofenac,Liver disease,Moderate,Liver problems can raise the risk of side effects with this medicine.,Ask your doctor before using it.
+Metformin,Liver disease,Moderate,Liver problems can raise the risk of side effects with this medicine.,Ask your doctor before using it.
+Ibuprofen,Stomach ulcer or bleeding history,High,These medicines can cause stomach ulcers and bleeding.,"Avoid unless your doctor says it is safe, and ask about stomach protection."
+Diclofenac,Stomach ulcer or bleeding history,High,These medicines can cause stomach ulcers and bleeding.,"Avoid unless your doctor says it is safe, and ask about stomach protection."
+Aspirin,Stomach ulcer or bleeding history,High,These medicines can cause stomach ulcers and bleeding.,"Avoid unless your doctor says it is safe, and ask about stomach protection."
+Prednisolone,Stomach ulcer or bleeding history,Moderate,Steroids can irritate the stomach.,Take with food and tell your doctor.
+Clopidogrel,Stomach ulcer or bleeding history,Moderate,A history of bleeding raises the risk with this medicine.,Make sure your cardiologist or anticoagulant clinic knows.
+Warfarin,Stomach ulcer or bleeding history,Moderate,A history of bleeding raises the risk with this medicine.,Make sure your cardiologist or anticoagulant clinic knows.
+Azithromycin,Heart rhythm problem,Moderate,It can affect the heart's rhythm (QT prolongation).,Tell your doctor about your heart rhythm problem before taking it.
+Ondansetron,Heart rhythm problem,Moderate,It can affect the heart's rhythm (QT prolongation).,Tell your doctor about your heart rhythm problem before taking it.
+Aspirin,Child under 16,High,"Aspirin is linked to Reye's syndrome, a rare but serious illness, in children and teenagers.",Don't give aspirin to anyone under 16 unless a doctor prescribed it.
+Prednisolone,Diabetes,Moderate,Steroids raise blood sugar.,Check sugar more often and tell your doctor.
+Metoprolol,Diabetes,Moderate,It can hide the warning signs of low blood sugar.,Check sugar more often and tell your doctor.
+Ibuprofen,High blood pressure,Moderate,Anti-inflammatory painkillers can raise blood pressure and weaken blood pressure medicines.,Ask your doctor or pharmacist before regular use.
+Diclofenac,High blood pressure,Moderate,Anti-inflammatory painkillers can raise blood pressure and weaken blood pressure medicines.,Ask your doctor or pharmacist before regular use.
+Prednisolone,High blood pressure,Moderate,Steroids can raise blood pressure.,Have your blood pressure checked regularly.
